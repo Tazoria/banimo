@@ -78,7 +78,7 @@
          * @param authentication
          * @return
          */
-        public String generatedAccessToken(Authentication authentication) {
+        public String generateAccessToken(Authentication authentication) {
             return generateToken(authentication, accessTokenValidTime);
         }
     
@@ -132,7 +132,7 @@
                             .map(SimpleGrantedAuthority::new)
                             .collect(Collectors.toList());
     
-            User principal = new User(claims.getSubject(), "", authorities);
+            User principal = new User(claims.getSubject(), "", authorities);    // 패스워드는 사용하지 않음
             return new UsernamePasswordAuthenticationToken(principal, token, authorities);
         }
     

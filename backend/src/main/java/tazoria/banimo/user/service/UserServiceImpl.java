@@ -12,10 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import tazoria.banimo.common.constants.ResultMessage;
 import tazoria.banimo.common.dto.ApiResponseDTO;
-import tazoria.banimo.common.utils.jwt.JwtCode;
 import tazoria.banimo.user.entity.UserEntity;
 import tazoria.banimo.user.dto.SignupDto;
-import tazoria.banimo.user.dto.SigninDto;
+import tazoria.banimo.user.dto.LoginDto;
 import tazoria.banimo.user.dto.TokenResponseDto;
 import tazoria.banimo.user.repository.UserRepository;
 import tazoria.banimo.common.utils.jwt.JwtTokenProvider;
@@ -31,18 +30,18 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public ResponseEntity<ApiResponseDTO<TokenResponseDto>> signin(SigninDto signinDto) {
+    public ResponseEntity<ApiResponseDTO<TokenResponseDto>> login(LoginDto loginDto) {
         try {
             // 사용자 인증
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            signinDto.getUsername(),
-                            signinDto.getPassword()
+                            loginDto.getUsername(),
+                            loginDto.getPassword()
                     )
             );
 
             // 토큰 발급
-            String accessToken = jwtProvider.generatedAccessToken(authentication);
+            String accessToken = jwtProvider.generateAccessToken(authentication);
             String refreshToken = jwtProvider.generateRefreshToken(authentication);
 
             return ResponseEntity
@@ -51,11 +50,11 @@ public class UserServiceImpl implements UserService {
         }catch(BadCredentialsException e) {
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
-                    .body(ApiResponseDTO.error(e));  // todo 유연하게 추가 필요할듯
+                    .body(ApiResponseDTO.error(e.getMessage()));
         }catch(Exception e) {
-            log.info("Error during signin: {}", e.getMessage());
+            log.info("Error during login: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(ApiResponseDTO.error(e));
+                    .body(ApiResponseDTO.error(e.getMessage()));
         }
 
     }

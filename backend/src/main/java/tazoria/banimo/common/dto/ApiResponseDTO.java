@@ -51,7 +51,38 @@ public class ApiResponseDTO<T> {
     }
 
     /**
-     * 에러 응답
+     * 실패 응답 - ApiError 객체 사용
+     * @param error
+     * @return
+     * @param <T>
+     */
+    public static <T> ApiResponseDTO<T> fail(ApiError error) {
+        return ApiResponseDTO.<T>builder()
+                .status(STATUS_ERROR)
+                .data(null)
+                .errors(error)
+                .build();
+    }
+
+    /**
+     * 에러응답
+     * @param message
+     * @return
+     * @param <T>
+     */
+    public static <T> ApiResponseDTO<T> error(String message) {
+        return ApiResponseDTO.<T>builder()
+                .status(STATUS_ERROR)
+                .data(null)
+                .errors(ApiError.builder()
+                        .message(message)
+                        .validations(null)
+                        .build()
+                ).build();
+    }
+
+    /**
+     * 에러 응답 - ApiError 객체 사용
      * @param error
      * @return
      * @param <T>
