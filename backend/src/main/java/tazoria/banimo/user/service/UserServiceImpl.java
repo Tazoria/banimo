@@ -14,7 +14,7 @@ import tazoria.banimo.common.constants.ResultMessage;
 import tazoria.banimo.common.dto.ApiResponseDTO;
 import tazoria.banimo.user.entity.UserEntity;
 import tazoria.banimo.user.dto.SignupDto;
-import tazoria.banimo.user.dto.LoginDto;
+import tazoria.banimo.user.dto.UserInfoDto;
 import tazoria.banimo.user.dto.TokenResponseDto;
 import tazoria.banimo.user.repository.UserRepository;
 import tazoria.banimo.common.utils.jwt.JwtTokenProvider;
@@ -30,13 +30,13 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public ResponseEntity<ApiResponseDTO<TokenResponseDto>> login(LoginDto loginDto) {
+    public ResponseEntity<ApiResponseDTO<TokenResponseDto>> login(UserInfoDto userInfoDto) {
         try {
             // 사용자 인증
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            loginDto.getUsername(),
-                            loginDto.getPassword()
+                            userInfoDto.getUsername(),
+                            userInfoDto.getPassword()
                     )
             );
 
@@ -88,13 +88,13 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 사용자 조회
-     *
-     * @param username
+     * @param userInfoDto
      * @return
      */
-    public ResponseEntity<ApiResponseDTO<UserEntity>> getUser(String username) {
-        return userRepository.findByUsername(username)
-                .map(user -> ResponseEntity.ok(ApiResponseDTO.success(user)))
+    public ResponseEntity<ApiResponseDTO<UserInfoDto>> me(UserInfoDto userInfoDto) {
+        return userRepository.findByUsername(userInfoDto.getUsername())
+                .map(user -> ResponseEntity
+                        .ok(ApiResponseDTO.success(new UserInfoDto(user.getUsername(), user.getPassword()))))
                 .orElseGet(() -> ResponseEntity
                         .badRequest()
                         .body(ApiResponseDTO.fail(ResultMessage.NOT_FOUND.getMessage())));
