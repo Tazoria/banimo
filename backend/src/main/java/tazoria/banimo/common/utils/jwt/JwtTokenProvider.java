@@ -17,7 +17,8 @@
     import org.springframework.security.core.userdetails.User;
     import org.springframework.security.core.authority.SimpleGrantedAuthority;
     import org.springframework.stereotype.Component;
-    
+    import tazoria.banimo.user.dto.UserInfoDto;
+
     import java.nio.charset.StandardCharsets;
     import java.security.Key;
     import java.util.Arrays;
@@ -43,10 +44,14 @@
     
         @Value("${jwt.secret}")
         private String secretKeyString;  // 시크릿 키를 가져오는 변수
-    
+
         @PostConstruct
         protected void init() {
-            key = Keys.hmacShaKeyFor(secretKeyString.getBytes(StandardCharsets.UTF_8)); // 시크릿 키를 사용하여 Key 객체 생성
+            if (secretKeyString == null || secretKeyString.isEmpty()) {
+                System.out.println("secretKeyString is null or empty!"); // 콘솔 출력
+                throw new IllegalArgumentException("jwt.secret 값이 비어 있습니다.");
+            }
+            key = Keys.hmacShaKeyFor(secretKeyString.getBytes(StandardCharsets.UTF_8));
         }
     
         /**
@@ -62,6 +67,7 @@
             Date now = new Date();
             Date expiration = new Date(now.getTime() + accessTokenValidTime);
 
+            log.info("===== generateTokeen =====");
             return Jwts.builder()
                     .claims()
                     .subject(authentication.getName())   // 사용자 ID
@@ -129,13 +135,16 @@
                     .build()
                     .parseSignedClaims(token)
                     .getBody();
-    
+
             Collection<? extends GrantedAuthority> authorities =
                     Arrays.stream(claims.get("auth").toString().split(","))
                             .map(SimpleGrantedAuthority::new)
                             .collect(Collectors.toList());
-    
-            User principal = new User(claims.getSubject(), "", authorities);    // 패스워드는 사용하지 않음
+
+            String username = claims.getSubject();
+
+            UserInfoDto principal = new UserInfoDto(username, null); // password는 null 처리
+
             return new UsernamePasswordAuthenticationToken(principal, token, authorities);
         }
     

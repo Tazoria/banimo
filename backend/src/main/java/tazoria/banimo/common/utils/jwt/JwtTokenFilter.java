@@ -26,15 +26,23 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = getJwtFromRequest(request);
+        String path = request.getRequestURI();
+        if (path.startsWith("/user/login")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String token = resolveToken(request);
 
         try {
-            if (jwtTokenProvider.validateToken(token) == JwtCode.ACCESS && SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (token != null && jwtTokenProvider.validateToken(token) == JwtCode.ACCESS && SecurityContextHolder.getContext().getAuthentication() == null) {
                 Authentication authentication = jwtTokenProvider.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                log.info("Authentication 클래스: {}", authentication.getClass().getName());
+                log.info("JWT 인증 완료");
             }
         }catch(Exception e) {
-            log.warn("Could not set user authentication in security context", e);
+            log.warn("JWT 필터 예외: {}", e.getMessage());
         }
 
         // 다음 필터로 이동
@@ -42,13 +50,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     }
 
     // 헤더에서 토큰정보 반환
-    private String getJwtFromRequest(HttpServletRequest request) {
+    private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-
-        if(bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }else {
-            return "";
-        }
+        return (bearerToken != null && bearerToken.startsWith("Bearer "))
+                ? bearerToken.substring(7)
+                : null;
     }
 }
