@@ -1,11 +1,12 @@
+// src/router/index.js
 import Vue from 'vue';
-import VueRouter, { RouteConfig } from 'vue-router';
+import VueRouter from 'vue-router';
 import LoginPage from '@/views/user/LoginPage.vue';
 import SignupPage from '@/views/user/SignupPage.vue';
 
 Vue.use(VueRouter);
 
-const routes: Array<RouteConfig> = [
+const routes = [
   {
     path: '/',
     redirect: '/login',

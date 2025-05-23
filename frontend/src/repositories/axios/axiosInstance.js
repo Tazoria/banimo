@@ -10,13 +10,20 @@ const axiosInstance = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
-// 요청 인터셉터 (예: 토큰추가)
+// 요청 인터셉터 (예: 토큰 추가)
 axiosInstance.interceptors.request.use((config) => {
   const token = tokenService.getAccessToken();
-  if (token && config.headers) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
+
+  // config 복사 + headers 복사 (헤더가 없을 수 있으니 기본값 설정)
+  const newConfig = {
+    ...config,
+    headers: {
+      ...config.headers,
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  };
+
+  return newConfig;
 });
 
 // 응답 인터셉터 (에러 통일 처리 가능)

@@ -1,33 +1,9 @@
-// userStore.ts
-import { ActionContext, Module } from 'vuex';
-import axios from 'axios';
-import { RootState } from '@/store/types';
+// userStore.js
+import axiosInstance from '@/repositories/axios/axiosInstance'; // 본인이 만든 axios 인스턴스 경로 맞춰서 수정
 
-export interface UserInfo {
-  username: string;
-  email: string;
-}
-
-export interface UserState {
-  accessToken: string;
-  userInfo: UserInfo | null;
-  isAuthenticated: boolean;
-}
-
-interface LoginCredentials {
-  username: string;
-  password: string;
-}
-
-interface LoginResponseData {
-  accessToken: string;
-}
-
-type UserMeResponseData = UserInfo;
-
-const userStore: Module<UserState, RootState> = {
+const userStore = {
   namespaced: true,
-  state: (): UserState => ({
+  state: () => ({
     accessToken: localStorage.getItem('accessToken') || '',
     userInfo: null,
     isAuthenticated: !!localStorage.getItem('accessToken'),
@@ -47,15 +23,15 @@ const userStore: Module<UserState, RootState> = {
     },
   },
   actions: {
-    async login({ commit }: ActionContext<UserState, RootState>, credentials: LoginCredentials): Promise<void> {
+    async login({ commit }, credentials) {
       try {
-        const response = await axios.post<LoginResponseData>('/api/user/login', credentials);
+        const response = await axiosInstance.post('/user/login', credentials);
         const { accessToken } = response.data;
         localStorage.setItem('accessToken', accessToken);
-        axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+
         commit('SET_TOKEN', accessToken);
 
-        const userResponse = await axios.get<UserMeResponseData>('/api/user/me');
+        const userResponse = await axiosInstance.get('/user/me');
         commit('SET_USER', userResponse.data);
       } catch (error) {
         console.error('로그인 실패:', error);
@@ -64,21 +40,19 @@ const userStore: Module<UserState, RootState> = {
     },
     logout({ commit }) {
       localStorage.removeItem('accessToken');
-      delete axios.defaults.headers.common.Authorization;
       commit('LOGOUT');
     },
     async checkAuth({ commit }) {
       const accessToken = localStorage.getItem('accessToken');
       if (accessToken) {
-        axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+        // axiosInstance 인터셉터에서 토큰 읽어서 설정함 (tokenService 사용 중)
         try {
-          const response = await axios.get<UserMeResponseData>('/api/user/me');
+          const response = await axiosInstance.get('/user/me');
           commit('SET_TOKEN', accessToken);
           commit('SET_USER', response.data);
         } catch (error) {
           console.error('인증 확인 실패, 로그아웃:', error);
           localStorage.removeItem('accessToken');
-          delete axios.defaults.headers.common.Authorization;
           commit('LOGOUT');
         }
       } else {

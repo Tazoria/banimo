@@ -1,12 +1,11 @@
-// store/index.ts
+// store/index.js
 import Vue from 'vue';
 import Vuex from 'vuex';
 import userStore from '@/store/modules/userStore';
-import { RootState } from '@/store/types';
 
 Vue.use(Vuex);
 
-const store = new Vuex.Store<RootState>({
+const store = new Vuex.Store({
   state: {
     appName: 'BanimoDiary',
   },

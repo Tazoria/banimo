@@ -41,9 +41,9 @@
 
         <div>
           <button
-            type="submit"
+            type="button"
             class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
-            onclick="submit()"
+            @click="submit()"
           >
             Sign in
           </button>

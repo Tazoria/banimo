@@ -32,7 +32,7 @@
     
         private final RefreshTokenRepository refreshTokenRepository;
         private final Environment env;
-    
+
         private Key key;
     
         @Value("${jwt.token.accessExpiration}")
@@ -58,10 +58,10 @@
             String authorities = authentication.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.joining(","));  // 권한을 콤마로 연결
-    
+
             Date now = new Date();
             Date expiration = new Date(now.getTime() + accessTokenValidTime);
-    
+
             return Jwts.builder()
                     .claims()
                     .subject(authentication.getName())   // 사용자 ID
@@ -79,7 +79,10 @@
          * @return
          */
         public String generateAccessToken(Authentication authentication) {
-            return generateToken(authentication, accessTokenValidTime);
+//            return generateToken(authentication, accessTokenValidTime);
+            String token  = generateToken(authentication, accessTokenValidTime);
+            log.info("===== access token ===== " + token);
+            return token;
         }
     
         /**
