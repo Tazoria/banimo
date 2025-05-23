@@ -1,5 +1,6 @@
 backend/out
 backend/build
+backend/.env
 .idea
 
 
