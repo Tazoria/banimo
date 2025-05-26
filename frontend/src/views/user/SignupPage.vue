@@ -4,28 +4,6 @@
 
     <form action="#" class="w-full flex flex-col gap-4">
       <div class="flex items-start flex-col justify-start">
-        <label for="firstName" class="text-sm text-gray-700 dark:text-gray-200 mr-2">First Name:</label>
-        <input
-          type="text"
-          id="firstName"
-          name="firstName"
-          autocomplete="given-name"
-          class="w-full px-3 dark:text-gray-200 dark:bg-gray-900 py-2 rounded-md border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
-        />
-      </div>
-
-      <div class="flex items-start flex-col justify-start">
-        <label for="lastName" class="text-sm text-gray-700 dark:text-gray-200 mr-2">Last Name:</label>
-        <input
-          type="text"
-          id="lastName"
-          name="lastName"
-          autocomplete="family-name"
-          class="w-full px-3 dark:text-gray-200 dark:bg-gray-900 py-2 rounded-md border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
-        />
-      </div>
-
-      <div class="flex items-start flex-col justify-start">
         <label for="username" class="text-sm text-gray-700 dark:text-gray-200 mr-2">Username:</label>
         <input
           type="text"
@@ -80,3 +58,33 @@
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  name: 'SignupPage',
+  data() {
+    return {
+      userInfo: {
+        username: '',
+        email: '',
+        password: '',
+      },
+      confirmPassword: '',
+    };
+  },
+  methods: {
+    /* isValidUserInfo() {
+      return this.userInfo.username && this.userInfo.email && this.userInfo.password && (this.userInfo.password === this.confirmPassword);
+    },
+    async onSubmit() {
+      if (this.isValidUserInfo()) {
+        await this.$store.dispatch('user/signup', this.userInfo);
+        console.log('회원가입이 완료되었습니다.');
+        this.$router.push('user/login');
+      } else {
+        console.log('가입정보를 확인해주세요.');
+      }
+    }, */
+  },
+};
+</script>

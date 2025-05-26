@@ -8,7 +8,7 @@ import tazoria.banimo.user.dto.UserInfoDto;
 import tazoria.banimo.user.dto.TokenResponseDto;
 
 public interface UserService {
-    ResponseEntity<ApiResponseDTO<TokenResponseDto>> login(UserInfoDto userInfoDto);
-    ResponseEntity<ApiResponseDTO<String>> signup(SignupDto signinRequestDto);
-    ResponseEntity<ApiResponseDTO<UserInfoDto>> me(UserInfoDto userInfoDto);
+//    ResponseEntity<ApiResponseDTO<TokenResponseDto>> login(UserInfoDto userInfoDto);
+    ResponseEntity<ApiResponseDTO<String>> signup(SignupDto signupDto);
+//    ResponseEntity<ApiResponseDTO<UserInfoDto>> me(UserInfoDto userInfoDto);
 }

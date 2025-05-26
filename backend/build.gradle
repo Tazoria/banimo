@@ -18,10 +18,12 @@ repositories {
 }
 
 dependencies {
-	// 1. Spring Boot 기본
+	// 1. Spring Boot 기본 + test 환경
 	implementation 'org.springframework.boot:spring-boot-starter-web' // Spring MVC 및 REST API 개발 지원
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'	// 데이터 검증 (예: @Valid, @NotNull)
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
 	// 2. Spring Security 관련

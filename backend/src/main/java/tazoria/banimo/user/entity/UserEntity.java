@@ -2,13 +2,14 @@ package tazoria.banimo.user.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
+import tazoria.banimo.common.constants.UserRole;
 import tazoria.banimo.common.entity.BaseEntity;
 
 @Entity
+@Table(name = "user_Info")
 @Getter
 @Setter
-@Table(name = "user_Info")
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserEntity extends BaseEntity {
 
@@ -16,7 +17,7 @@ public class UserEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "username", unique = true, updatable = false, nullable = false)
+    @Column(name = "username", unique = true, updatable = false, nullable = false, length = 50)
     private String username;
 
     @Column(name = "password", nullable = false)
@@ -25,15 +26,20 @@ public class UserEntity extends BaseEntity {
     @Column(name = "email", unique = true)
     private String email;
 
-    @Column(name = "isActive")
-    private Character isActive;
+    @Column(name = "isEnabled")
+    private Character isEnabled;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserRole role; // (USER, ADMIN)
 
     // 빌더 패턴으로 객체 생성
     @Builder
-    public UserEntity(String username, String password, String email, Character isActive) {
+    public UserEntity(String username, String password, String email, Character isEnabled, UserRole role) {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.isActive = isActive == null ? 'Y' : isActive;
+        this.isEnabled = isEnabled == null ? 'Y' : isEnabled;
+        this.role = role == null ? UserRole.USER : role; // 기본값은 USER
     }
 }
