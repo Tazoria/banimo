@@ -1,18 +1,15 @@
 package tazoria.banimo.user.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import tazoria.banimo.common.constants.UserRole;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserInfoDto {
     private String username;
-    private String password;
-
-    public UserInfoDto(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
+    private String email;
+    private UserRole role;
 }

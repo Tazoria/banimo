@@ -71,7 +71,7 @@ public class JwtUtil {
      * @param expiration 토큰 만료 시간 (밀리초 단위)
      * @return 생성된 JWT 토큰
      */
-    public String createToken(String username, String role, long expiration) {
+    public String createToken(String username, String role) {
         return Jwts.builder()
                 .claim("username", username)
                 .claim("role", role)

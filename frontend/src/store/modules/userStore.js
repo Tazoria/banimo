@@ -26,7 +26,7 @@ const userStore = {
     async login({ commit }, credentials) {
       try {
         const response = await axiosInstance.post('/user/login', credentials);
-        const { accessToken } = response.data;
+        const { accessToken } = response.data.data;
         localStorage.setItem('accessToken', accessToken);
 
         commit('SET_TOKEN', accessToken);

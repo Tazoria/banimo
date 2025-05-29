@@ -11,6 +11,8 @@ public enum ResultMessage {
     ERROR("요청 처리 중 오류가 발생했습니다."),
     NOT_FOUND("요청한 자원을 찾을 수 없습니다."),
 
+    LOGIN_SUCCESS("로그인이 성공적으로 완료되었습니다."),
+    LOGIN_FAILED("로그인에 실패했습니다. 아이디 또는 비밀번호를 확인해주세요."),
     JOIN_SUCCESS("회원가입이 완료되었습니다."),
     JOIN_FAILED("회원가입에 실패했습니다."),
     DUPLICATED_USERNAME("이미 가입된 회원입니다."),

@@ -87,7 +87,6 @@ public class SecurityConfig {
                 // 엔드포인트별 접근 권한 설정
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/", "/signup", "/user/login", "/user/signup").permitAll() // 로그인 및 회원가입 API는 인증 없이 접근 허용
-                        .requestMatchers("/admin").hasAuthority("ROLE_ADMIN") // 관리자 전용 API
                         .anyRequest().authenticated()) // 나머지 요청은 인증 필요
 
                 // JWT 필터 추가 (기존 UsernamePasswordAuthenticationFilter 이전에 실행)
