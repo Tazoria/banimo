@@ -6,7 +6,6 @@ module.exports = {
   extends: [
     'plugin:vue/essential',
     '@vue/airbnb',
-    '@vue/typescript/recommended',
   ],
   parserOptions: {
     ecmaVersion: 2020,
@@ -17,5 +16,7 @@ module.exports = {
     'max-len': 'off', // 줄 길이 제한 제거
     'vuejs-accessibility/label-has-for': 'off',
     'vuejs-accessibility/form-control-has-label': 'off',
+    'object-curly-newline': 'off',
+    'no-alert': 'off',
   },
 };

@@ -1,58 +1,55 @@
 <template>
-  <div class="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-      <!-- <img class="mx-auto h-10 w-auto" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company" /> -->
-      <h2 class="mt-10 text-center text-2xl leading-tight font-bold tracking-tight text-gray-900">Sign in to your account</h2>
-    </div>
+  <div class="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-900 px-6 py-12">
+    <div class="w-full max-w-sm space-y-8">
+      <div>
+        <h2 class="mt-6 text-center text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+          Sign in to your account
+        </h2>
+      </div>
 
-    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-      <form class="space-y-6" action="#" method="POST">
-        <div>
-          <label for="username" class="block text-sm leading-6 font-medium text-gray-900">Username</label>
-          <div class="mt-2">
+      <form class="mt-8 space-y-6" @submit.prevent="handleLogin">
+        <div class="space-y-4">
+          <div>
+            <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Username</label>
             <input
               type="text"
-              name="username"
               id="username"
+              name="username"
               v-model.trim="userInfo.username"
               autocomplete="username"
               required
-              class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 border border-gray-300 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 sm:text-sm leading-6"
+              class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
-        </div>
 
-        <div>
-          <div class="flex items-center justify-between">
-            <label for="password" class="block text-sm leading-6 font-medium text-gray-900">Password</label>
-          </div>
-          <div class="mt-2">
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-200">Password</label>
             <input
               type="password"
-              name="password"
               id="password"
+              name="password"
               v-model.trim="userInfo.password"
               autocomplete="current-password"
               required
-              class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 border border-gray-300 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 sm:text-sm leading-6"
+              class="mt-1 block w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
         </div>
 
         <div>
           <button
-            type="button"
-            class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
-            @click="handleLogin()"
+            type="submit"
+            class="w-full flex justify-center rounded-md bg-indigo-600 hover:bg-indigo-700 px-4 py-2 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           >
             Sign in
           </button>
-          <p class="pt-4 text-red-600" v-if="error">로그인 실패!</p>
+          <p class="pt-4 text-sm text-red-600" v-if="error">로그인 실패!</p>
         </div>
       </form>
-      <div class="flex flex-col w-full mt-4">
-        <a href="#" class="font-semibold text-center text-indigo-600 hover:text-indigo-500">Forgot password?</a>
-        <router-link to="/signup" class="mt-10 text-center text-sm leading-6 text-gray-500 ">Not a member?</router-link>
+
+      <div class="text-center mt-6">
+        <a href="#" class="block text-sm text-indigo-600 hover:text-indigo-500 font-medium">Forgot password?</a>
+        <router-link to="/signup" class="block mt-2 text-sm text-gray-500 dark:text-gray-400">Not a member? Sign up</router-link>
       </div>
     </div>
   </div>
@@ -75,12 +72,12 @@ export default {
       try {
         this.error = null;
         await this.$store.dispatch('user/login', this.userInfo);
-        this.$router.push('/dashboard');
+        this.$router.push('/diaryList');
       } catch (err) {
         this.error = true;
-        console.log('error > ', err);
+        console.error('로그인 실패:', err);
       }
     },
   },
 };
-</Script>
+</script>

@@ -1,5 +1,5 @@
 const ACCESS_TOKEN_KEY = 'accessToken';
-const REFRESH_TOKEN_KEY = 'refreshToken';
+// const REFRESH_TOKEN_KEY = 'refreshToken';
 
 /**
  * 토큰 관리 유틸
@@ -9,14 +9,14 @@ const tokenService = {
   setAccessToken: (token) => localStorage.setItem(ACCESS_TOKEN_KEY, token),
   removeAccessToken: () => localStorage.removeItem(ACCESS_TOKEN_KEY),
 
-  getRefreshToken: () => localStorage.getItem(REFRESH_TOKEN_KEY),
+  /* getRefreshToken: () => localStorage.getItem(REFRESH_TOKEN_KEY),
   setRefreshToken: (token) => localStorage.setItem(REFRESH_TOKEN_KEY, token),
   removeRefreshToken: () => localStorage.removeItem(REFRESH_TOKEN_KEY),
 
   clear: () => {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
     localStorage.removeItem(REFRESH_TOKEN_KEY);
-  },
+  }, */
 };
 
 export default tokenService;

@@ -3,6 +3,7 @@ package tazoria.banimo.user.service;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,9 +21,9 @@ import tazoria.banimo.user.dto.UserInfoDto;
 import tazoria.banimo.user.entity.UserEntity;
 import tazoria.banimo.user.repository.UserRepository;
 
-@Slf4j
-@AllArgsConstructor
 @Service
+@AllArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -49,7 +50,7 @@ public class UserServiceImpl implements UserService {
             return ResponseEntity.ok().body(ApiResponseDTO.success(new TokenResponseDto(accessToken)));
         } catch (Exception e) {
             return ResponseEntity
-                    .badRequest()
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(ApiResponseDTO.error(ResultMessage.LOGIN_FAILED.getMessage()));
         }
     }
@@ -64,7 +65,7 @@ public class UserServiceImpl implements UserService {
         boolean isDuplicatedUser = validateDuplicateUser(signupDto.getUsername(), signupDto.getEmail());
         if (isDuplicatedUser) {
             return ResponseEntity
-                    .badRequest()
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(ApiResponseDTO.error(ResultMessage.DUPLICATED_USERNAME.getMessage()));
         }
 
@@ -107,7 +108,7 @@ public class UserServiceImpl implements UserService {
                 .username(signupDto.getUsername())
                 .password(passwordEncoder.encode(signupDto.getPassword()))
                 .email(signupDto.getEmail())
-                .isEnabled('Y')  // null을 넘기면 'Y'로 처리됨
+                .isEnabled(true)
                 .role(signupDto.getRole())      // null을 넘기면 USER로 처리됨
                 .build();
     }

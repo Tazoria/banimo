@@ -1,12 +1,13 @@
 // userStore.js
-import axiosInstance from '@/repositories/axios/axiosInstance'; // 본인이 만든 axios 인스턴스 경로 맞춰서 수정
+import axiosInstance from '@/repositories/axios/axiosInstance';
+import tokenService from '@/repositories/axios/tokenService';
 
 const userStore = {
   namespaced: true,
   state: () => ({
-    accessToken: localStorage.getItem('accessToken') || '',
+    accessToken: tokenService.getAccessToken() || '',
     userInfo: null,
-    isAuthenticated: !!localStorage.getItem('accessToken'),
+    isAuthenticated: !!tokenService.getAccessToken(),
   }),
   mutations: {
     SET_TOKEN(state, accessToken) {
@@ -27,7 +28,8 @@ const userStore = {
       try {
         const response = await axiosInstance.post('/user/login', credentials);
         const { accessToken } = response.data.data;
-        localStorage.setItem('accessToken', accessToken);
+
+        tokenService.setAccessToken(accessToken);
 
         commit('SET_TOKEN', accessToken);
 
@@ -38,21 +40,29 @@ const userStore = {
         throw new Error('로그인 실패');
       }
     },
+    async signup(_, userInfo) {
+      try {
+        const response = await axiosInstance.post('/user/signup', userInfo);
+        console.log('회원가입 성공:', response.data);
+      } catch (error) {
+        console.error('회원가입 실패:', error);
+        throw new Error('회원가입 실패');
+      }
+    },
     logout({ commit }) {
-      localStorage.removeItem('accessToken');
+      tokenService.removeAccessToken();
       commit('LOGOUT');
     },
     async checkAuth({ commit }) {
-      const accessToken = localStorage.getItem('accessToken');
+      const accessToken = tokenService.getAccessToken();
       if (accessToken) {
-        // axiosInstance 인터셉터에서 토큰 읽어서 설정함 (tokenService 사용 중)
         try {
           const response = await axiosInstance.get('/user/me');
           commit('SET_TOKEN', accessToken);
           commit('SET_USER', response.data);
         } catch (error) {
           console.error('인증 확인 실패, 로그아웃:', error);
-          localStorage.removeItem('accessToken');
+          tokenService.removeAccessToken();
           commit('LOGOUT');
         }
       } else {
