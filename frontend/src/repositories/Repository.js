@@ -1,5 +1,5 @@
 import axios from 'axios';
-import tokenService from '@/repositories/axios/tokenService';
+import tokenService from '@/repositories/tokenService';
 
 /**
  * 공통 Axios 인스턴스
