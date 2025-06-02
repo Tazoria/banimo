@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class DiaryServiceImpl implements DiaryService {
     public final DiaryRepository diaryRepository;
 
-    public ResponseEntity<ApiResponseDTO<List<DiaryDto>>> getPostList(String username) {
+    public ResponseEntity<ApiResponseDTO<List<DiaryDto>>> getDiaryList(String username) {
         // 로그인한 사용자의 일기 목록 조회
         List<DiaryEntity> postEntityList = diaryRepository.findAllByAuthor(username);
 
@@ -32,7 +32,7 @@ public class DiaryServiceImpl implements DiaryService {
         return ResponseEntity.ok(ApiResponseDTO.success(postList));
     }
 
-    public ResponseEntity<ApiResponseDTO<String>> writePost(DiaryDto diaryDto) {
+    public ResponseEntity<ApiResponseDTO<String>> createDiary(DiaryDto diaryDto) {
         // 일기 작성
         DiaryEntity diaryEntity = DiaryEntity.builder()
                 .author(diaryDto.getAuthor())

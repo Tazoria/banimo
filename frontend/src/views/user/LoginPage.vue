@@ -72,7 +72,7 @@ export default {
       try {
         this.error = null;
         await this.$store.dispatch('user/login', this.userInfo);
-        this.$router.push('/diaryList');
+        this.$router.push('/diary/list');
       } catch (err) {
         this.error = true;
         console.error('로그인 실패:', err);

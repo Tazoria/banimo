@@ -1,14 +1,39 @@
 <template>
-  <div class="flex justify-center justify-items-center items-center h-screen">
+  <div class="flex w-full flex-col justify-center justify-items-center items-center h-screen dark:bg-gray-900 dark:text-white">
+    <div class="flex w-2/3 justify-between mb-4">
+      <h1 class="text-2xl font-bold">일기 목록</h1>
+      <button class="w-32 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition"
+              @click="createDiary()">
+              일기 작성
+      </button>
+    </div>
     <vue-good-table
+      class="w-2/3"
       :columns="columns"
       :rows="diaries" />
   </div>
 </template>
 
 <script>
+import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+import { mapGetters } from 'vuex';
+
+const DiaryRepository = RepositoryFactory.get('diary');
+
 export default {
   name: 'DiaryList',
+  computed: {
+    ...mapGetters('user', ['userInfo']),
+  },
+  async created() {
+    const { data } = await DiaryRepository.getDiaryList(this.userInfo.data);
+    this.diaries = data.data.data;
+  },
+  methods: {
+    createDiary() {
+      this.$router.push('/diary/create');
+    },
+  },
   data() {
     return {
       columns: [
@@ -22,11 +47,7 @@ export default {
           label: '제목',
           field: 'title',
           type: 'string',
-        },
-        {
-          label: '내용',
-          field: 'content',
-          type: 'string',
+          width: '400px',
         },
         {
           label: '작성일',
@@ -35,7 +56,7 @@ export default {
           dateInputFormat: 'yyyy-MM-dd',
           dateOutputFormat: 'yyyy-MM-dd',
           dateFormat: 'yyyy-MM-dd',
-          width: '150px',
+          width: '120px',
         },
         {
           label: '수정일',
@@ -44,6 +65,7 @@ export default {
           dateInputFormat: 'yyyy-MM-dd',
           dateOutputFormat: 'yyyy-MM-dd',
           dateFormat: 'yyyy-MM-dd',
+          width: '120px',
         },
         {
           label: '즐겨찾기',
@@ -53,11 +75,7 @@ export default {
         },
       ],
       diaries: [
-        { id: 1, title: '첫 번째 일기', content: '오늘은 날씨가 좋았다.', createdDate: '2023-10-01', updatedDate: '2023-10-01', favorites: true },
-        { id: 2, title: '두 번째 일기', content: '오늘은 친구를 만났다.', createdDate: '2023-10-02', updatedDate: '2023-10-02', favorites: false },
-        { id: 3, title: '세 번째 일기', content: '오늘은 공부를 열심히 했다.', createdDate: '2023-10-03', updatedDate: '2023-10-03', favorites: true },
-        { id: 4, title: '네 번째 일기', content: '오늘은 운동을 했다.', createdDate: '2023-10-04', updatedDate: '2023-10-04', favorites: false },
-        { id: 5, title: '다섯 번째 일기', content: '오늘은 가족과 시간을 보냈다.', createdDate: '2023-10-05', updatedDate: '2023-10-05', favorites: true },
+
       ],
       loading: true,
       error: null,

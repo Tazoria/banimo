@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import tazoria.banimo.common.dto.ApiResponseDTO;
 import tazoria.banimo.diary.dto.DiaryDto;
 import tazoria.banimo.diary.service.DiaryService;
+import tazoria.banimo.user.dto.UserInfoDto;
 
 import java.util.List;
 
@@ -21,12 +22,12 @@ public class diaryController {
 
     /**
      * 로그인한 사용자의 일기 목록 조회
-     * @param username 조회할 사용자의 이름
+     * @param userInfoDto 조회할 사용자의 정보
      * @return 해당 사용자의 일기 목록
      */
     @GetMapping("/list")
-    public ResponseEntity<ApiResponseDTO<List<DiaryDto>>> getPostList(String username) {
-        return diaryService.getPostList(username);
+    public ResponseEntity<ApiResponseDTO<List<DiaryDto>>> getDiaryList(UserInfoDto userInfoDto) {
+        return diaryService.getDiaryList(userInfoDto.getUsername());
     }
 
     /**
@@ -34,8 +35,8 @@ public class diaryController {
      * @param diaryDto 작성할 일기의 내용 및 작성자 정보
      * @return 작성 결과 메시지
      */
-    @PostMapping("/write")
-    public ResponseEntity<ApiResponseDTO<String>> writePost(DiaryDto diaryDto) {
-        return diaryService.writePost(diaryDto);
+    @PostMapping("/create")
+    public ResponseEntity<ApiResponseDTO<String>> createDiary(DiaryDto diaryDto) {
+        return diaryService.createDiary(diaryDto);
     }
 }
