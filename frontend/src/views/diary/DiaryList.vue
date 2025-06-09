@@ -27,15 +27,24 @@ export default {
   },
   async created() {
     const { data } = await DiaryRepository.getDiaryList(this.userInfo.data);
-    this.diaries = data.data.data;
+    console.log('response.data.data >>> ', data.data);
+    this.diaries = data.data;
   },
   methods: {
     createDiary() {
-      this.$router.push('/diary/create');
+      this.$router.push({
+        path: '/diary/create',
+        name: 'DiaryDetail',
+        params: this.params,
+      });
     },
   },
   data() {
     return {
+      params: {
+        diaryId: null,
+        detailMode: 'create',
+      },
       columns: [
         {
           label: 'No',
@@ -51,7 +60,7 @@ export default {
         },
         {
           label: '작성일',
-          field: 'createdDate',
+          field: 'createdAt',
           type: 'date',
           dateInputFormat: 'yyyy-MM-dd',
           dateOutputFormat: 'yyyy-MM-dd',
@@ -60,7 +69,7 @@ export default {
         },
         {
           label: '수정일',
-          field: 'updatedDate',
+          field: 'updatedAt',
           type: 'date',
           dateInputFormat: 'yyyy-MM-dd',
           dateOutputFormat: 'yyyy-MM-dd',

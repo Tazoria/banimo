@@ -2,10 +2,7 @@ package tazoria.banimo.diary.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import tazoria.banimo.common.dto.ApiResponseDTO;
 import tazoria.banimo.diary.dto.DiaryDto;
 import tazoria.banimo.diary.service.DiaryService;
@@ -13,7 +10,7 @@ import tazoria.banimo.user.dto.UserInfoDto;
 
 import java.util.List;
 
-@RestController()
+@RestController
 @RequestMapping("/diary")
 @AllArgsConstructor
 public class diaryController {
@@ -36,7 +33,7 @@ public class diaryController {
      * @return 작성 결과 메시지
      */
     @PostMapping("/create")
-    public ResponseEntity<ApiResponseDTO<String>> createDiary(DiaryDto diaryDto) {
+    public ResponseEntity<ApiResponseDTO<String>> createDiary(@RequestBody DiaryDto diaryDto) {
         return diaryService.createDiary(diaryDto);
     }
 }

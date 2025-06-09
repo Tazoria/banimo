@@ -17,17 +17,14 @@ public class DiaryEntity extends BaseEntity {
     @Column(name = "id", nullable = false)
     private int id;
 
-    @Column(name = "writer", nullable = false)
+    @Column(name = "author", nullable = false)
     private String author;
 
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "content", length = 1000)
+    @Column(name = "content", nullable = false, length = 1000)
     private String content;
-
-    @Column(name = "isEnabled")
-    private boolean isEnabled;
 
     @Column(name = "favorites", nullable = false)
     private boolean favorites;
@@ -37,7 +34,6 @@ public class DiaryEntity extends BaseEntity {
         this.author = author;
         this.title = title;
         this.content = content;
-        this.isEnabled = isEnabled;
         this.favorites = favorites;
     }
 }

@@ -106,8 +106,13 @@ export default {
     },
     async handleSignup() {
       if (this.isValidUserInfo()) {
-        await this.$store.dispatch('user/signup', this.userInfo);
-        this.$router.push('/login');
+        try {
+          await this.$store.dispatch('user/signup', this.userInfo);
+          alert('회원가입 되었습니다.');
+          this.$router.push('/login');
+        } catch (e) {
+          alert(`회원가입에 실패하였습니다. \n[${e}]`);
+        }
       }
     },
   },

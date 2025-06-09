@@ -33,7 +33,13 @@ axiosInstance.interceptors.request.use(
 // 응답 인터셉터: 에러 처리 통일화 가능 (토큰 만료 등 대응 가능)
 axiosInstance.interceptors.response.use(
   (response) => response,
-  (error) => Promise.reject(error),
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      tokenService.removeAccessToken();
+    }
+
+    return Promise.reject(error);
+  },
 );
 
 export default axiosInstance;

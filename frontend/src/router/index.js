@@ -15,7 +15,7 @@ const routes = [
     name: 'Login',
     component: () => import('@/views/user/LoginPage.vue'),
     meta: {
-      title: 'Login',
+      title: '로그인',
     },
   },
   {
@@ -23,25 +23,34 @@ const routes = [
     name: 'Signup',
     component: () => import('@/views/user/SignupPage.vue'),
     meta: {
-      title: 'Signup',
+      title: '회원가입',
     },
   },
   {
     path: '/diary/list',
     name: 'DiaryList',
     component: () => import('@/views/diary/DiaryList.vue'),
+    meta: {
+      title: '다이어리',
+    },
   },
   {
     path: '/diary/detail/:diaryId', // 다이어리 상세페이지, 작성페이지, 수정페이지 공통
     name: 'DiaryDetail',
     component: () => import('@/views/diary/DiaryDetail.vue'),
     props: true,
+    meta: {
+      title: '다이어리',
+    },
   },
   {
     path: '/diary/create', // 다이어리 상세페이지, 작성페이지, 수정페이지 공통
     name: 'DiaryDetail',
     component: () => import('@/views/diary/DiaryDetail.vue'),
     props: true,
+    meta: {
+      title: '다이어리',
+    },
   },
 ];
 
@@ -54,6 +63,9 @@ const router = new VueRouter({
 // 전역 네비게이션 가드
 router.beforeEach((to, from, next) => {
   const isAuthenticated = !!store.getters['user/isAuthenticated'];
+  const DEFAULT_TITLE = 'Banimo Diary';
+
+  document.title = to.meta.title || DEFAULT_TITLE;
 
   // 로그인 됐는데 로그인 페이지 접근시
   if (to.path === '/login' && isAuthenticated) {

@@ -3,6 +3,8 @@ package tazoria.banimo.diary.dto;
 import lombok.*;
 import tazoria.banimo.diary.entity.DiaryEntity;
 
+import java.time.format.DateTimeFormatter;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -14,6 +16,8 @@ public class DiaryDto {
     public boolean favorites;
     public String createdAt;
     public String updatedAt;
+
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     /**
      * 일기 저장시
@@ -40,7 +44,8 @@ public class DiaryDto {
         this.title = entity.getTitle();
         this.content = entity.getContent();
         this.favorites = entity.isFavorites(); // boolean getter
-        this.createdAt = entity.getCreatedAt().toString(); // LocalDateTime 등
-        this.updatedAt = entity.getUpdatedAt().toString();
+        // 날짜 포맷팅
+        this.createdAt = entity.getCreatedAt() != null ? entity.getCreatedAt().format(FORMATTER) : null;
+        this.updatedAt = entity.getUpdatedAt() != null ? entity.getCreatedAt().format(FORMATTER) : null;
     }
 }

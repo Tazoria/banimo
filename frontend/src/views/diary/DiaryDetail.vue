@@ -32,7 +32,7 @@
     <!-- 저장 버튼 -->
     <div class="text-right" v-if="mode !== 'view'">
       <button
-        @click="saveDiary"
+        @click="createDiary()"
         class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
       >
         저장
@@ -43,18 +43,26 @@
 
 <script>
 import { RepositoryFactory } from '@/repositories/RepositoryFactory';
+import { mapGetters } from 'vuex';
+import AlertModal from '@/views/layout/modal/alertModal.vue';
 
 const DiaryRepository = RepositoryFactory.get('diary');
 
 export default {
-  props: ['diaryId'],
+  props: ['diaryId', 'detailMode'],
+  computed: {
+    ...mapGetters('user', ['userInfo']),
+  },
   created() {
+    this.diary.id = this.diaryId;
+    this.mode = this.detailMode;
+    this.diary.author = this.userInfo.data.username;
+
     if (this.diaryId) {
       this.getDiary();
 
-      // 모드 결정
-      const queryMode = this.$route.query.mode;
-      if (queryMode === 'update') {
+      console.log('queryMode >>> ', this.mode);
+      if (this.mode === 'update') {
         this.mode = 'update';
       } else {
         this.mode = 'view';
@@ -62,19 +70,46 @@ export default {
     }
   },
   methods: {
-    async getDiary() {
-      const { data } = await DiaryRepository.getDiary(this.diaryId);
-      this.diary = data;
+    openAlertModal(title, message) {
+      try {
+        this.$store.dispatch('modal/openModal', {
+          component: AlertModal,
+          props: {
+            title,
+            message,
+          },
+        });
+      } catch (e) {
+        if (e.message === '중첩 모달 방지') {
+          console.log('이미 모달이 열려있습니다.');
+        } else {
+          console.error('기타 오류: ', e);
+        }
+      }
     },
-    async saveDiary() {
-      let data = {};
+    async getDiary() {
+      const { response } = await DiaryRepository.getDiary(this.diary.id);
+      this.diary = response.data;
+    },
+    async createDiary() {
+      let response;
       switch (this.mode) {
-        case 'created':
-          ({ data } = await DiaryRepository.saveDiary(this.diary));
-          console.log(data);
+        case 'create':
+          console.log('this.author2 > ', this.author);
+          response = await DiaryRepository.createDiary(this.diary);
+          if (response.status === 'success') {
+            this.openAlertModal('일기 저장', '일기가 저장되었습니다.');
+          } else {
+            this.openAlertModal('일기 저장', '일기 저장에 실패했습니다.');
+          }
           break;
         case 'update':
-          ({ data } = await DiaryRepository.updateDiary(this.diary));
+          response = await DiaryRepository.updateDiary(this.diary);
+          if (response.status === 'success') {
+            this.openAlertModal('일기 수정', '일기가 수정되었습니다.');
+          } else {
+            this.openAlertModal('일기 수정', '일기 수정에 실패했습니다.');
+          }
           break;
         default:
           return;
@@ -89,7 +124,8 @@ export default {
         author: '',
         title: '',
         content: '',
-        favorite: '',
+        isEnabled: true,
+        favorite: false,
       },
       mode: 'create',
     };
